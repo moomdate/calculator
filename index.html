@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="js/app.js"></script>
+	<title>Calculator</title>
+	<link rel="stylesheet" type="text/css" href="styles/mySty.css">
+	<style type="text/css">
+		@font-face {
+			font-family: 'MyWebFont';
+			src:  url('digital-7.woff') format('woff');
+		}
+		.Myfont{
+			font-family: 'MyWebFont';
+			color: #616161;
+			font-size: 65px;
+			margin-top: 1px;
+		}
+		.opera{
+	margin-bottom: 0px;
+	margin-top: 0px;
+	color:#616161;
+}
+	</style>
+</head>
+<body>
+	<div class="mycal">
+		<h2>Hello world</h2>
+		<div class="myLcd">
+		<h3 class="opera" id="opera"></h3>
+		<h1 class="Myfont" id="led"></h1>
+		</div>
+		
+		<table width="100%">
+			<tr>
+				<td><button class=mybutton onclick="myNum('7')">7</button></td>
+				<td><button class=mybutton onclick="myNum('8')">8</button></td>
+				<td><button class=mybutton onclick="myNum('9')">9</button></td>
+				<td><button class=mybutton onclick="myOpera('/')">/</button></td>
+			</tr>
+			<tr >
+				<td><button class=mybutton onclick="myNum('4')">4</button></td>
+				<td><button class=mybutton onclick="myNum('5')">5</button></td>
+				<td><button class=mybutton onclick="myNum('6')">6</button></td>
+				<td><button class=mybutton onclick="myOpera('*')">*</button></td>
+			</tr>
+			<tr >
+				<td><button class=mybutton onclick="myNum('1')">1</button></td>
+				<td><button class=mybutton onclick="myNum('2')">2</button></td>
+				<td><button class=mybutton onclick="myNum('3')">3</button></td>
+				<td><button class=mybutton onclick="myOpera('-')">-</button></td>
+			</tr>
+			<tr >
+				<td><button class=mybutton onclick="clearAll()">C</button></td>
+				<td><button class=mybutton  onclick="myNum('0')">0</button></td>
+				<td><button class=mybutton onclick="myOpera('=')">=</button></td>
+				<td><button class=mybutton onclick="myOpera('+')">+</button></td>
+			</tr>
+		</table>
+	</div>
+</body>
+</html>
