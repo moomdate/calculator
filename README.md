@@ -1,2 +1,2 @@
-# calculator
-![alt text](https://github.com/moomdate/calculator/blob/master/image.PNG)
+# vue-calculator
+A lightweight scientific calculator built with VueJS
