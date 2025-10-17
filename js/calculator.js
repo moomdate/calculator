@@ -25,6 +25,24 @@ function inputNumber(num) {
 }
 
 /**
+ * เพิ่มจุดทศนิยม
+ */
+function inputDecimal() {
+  // ถ้าเป็น Error ให้รีเซ็ตก่อน
+  if (currentValue === 'Error') {
+    currentValue = '0.';
+    updateDisplay();
+    return;
+  }
+  
+  // ตรวจสอบว่ามีจุดทศนิยมอยู่แล้วหรือไม่
+  if (!currentValue.includes('.')) {
+    currentValue += '.';
+    updateDisplay();
+  }
+}
+
+/**
  * เลือกเครื่องหมายคำนวณ (+, -, *, /)
  * @param {string} operator - เครื่องหมายที่เลือก
  */
@@ -75,8 +93,17 @@ function calculate() {
       break;
   }
   
-  // ปัดเศษทศนิยมให้เหลือ 8 ตำแหน่ง
-  currentValue = String(Math.round(result * 100000000) / 100000000);
+  // ปัดเศษทศนิยมให้เหลือ 8 ตำแหน่ง และตัดเลข 0 ท้ายทิ้ง
+  result = Math.round(result * 100000000) / 100000000;
+  
+  // แปลงเป็น string และตัดศูนย์ท้ายออก
+  currentValue = String(result);
+  
+  // ถ้าเป็นทศนิยมที่ยาวมาก ให้แสดงแบบ exponential
+  if (currentValue.length > 12 && currentValue.includes('.')) {
+    currentValue = result.toExponential(6);
+  }
+  
   currentOperator = null;
   previousValue = null;
   updateDisplay();
@@ -127,6 +154,10 @@ document.addEventListener('keydown', (e) => {
   if (e.key >= '0' && e.key <= '9') {
     inputNumber(e.key);
   } 
+  // จุดทศนิยม
+  else if (e.key === '.' || e.key === ',') {
+    inputDecimal();
+  }
   // เครื่องหมายคำนวณ
   else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
     inputOperator(e.key);
