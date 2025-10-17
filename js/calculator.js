@@ -4,13 +4,14 @@ let previousValue = null;    // ค่าที่เก็บไว้ก่อ
 let currentOperator = null;  // เครื่องหมายคำนวณที่เลือก
 let calculationHistory = []; // เก็บประวัติการคำนวณ
 let isHistoryVisible = true; // สถานะการแสดงประวัติ
+let equationDisplay = '';    // สมการที่แสดงด้านบน
 
 /**
  * อัพเดทค่าที่แสดงบนหน้าจอ
  */
 function updateDisplay() {
   document.getElementById('valueDisplay').textContent = currentValue;
-  document.getElementById('operatorDisplay').textContent = currentOperator || '';
+  document.getElementById('equationDisplay').textContent = equationDisplay;
 }
 
 /**
@@ -23,6 +24,9 @@ function inputNumber(num) {
   } else {
     currentValue += num;
   }
+  
+  // อัพเดทสมการ
+  updateEquationDisplay();
   updateDisplay();
 }
 
@@ -38,8 +42,65 @@ function inputDecimal() {
   
   if (!currentValue.includes('.')) {
     currentValue += '.';
+    updateEquationDisplay();
     updateDisplay();
   }
+}
+
+/**
+ * อัพเดทการแสดงสมการ
+ */
+function updateEquationDisplay() {
+  if (previousValue !== null && currentOperator) {
+    equationDisplay = `${previousValue} ${getOperatorSymbol(currentOperator)} ${currentValue}`;
+  } else if (previousValue !== null && !currentOperator) {
+    // หลังจากกด = แล้ว
+    equationDisplay = '';
+  } else {
+    equationDisplay = '';
+  }
+}
+
+/**
+ * เปลี่ยนเครื่องหมาย +/-
+ */
+function toggleSign() {
+  if (currentValue === 'Error' || currentValue === '0') {
+    return;
+  }
+  
+  if (currentValue.startsWith('-')) {
+    currentValue = currentValue.substring(1);
+  } else {
+    currentValue = '-' + currentValue;
+  }
+  
+  updateEquationDisplay();
+  updateDisplay();
+}
+
+/**
+ * คำนวณเปอร์เซ็นต์
+ */
+function calculatePercent() {
+  if (currentValue === 'Error') {
+    return;
+  }
+  
+  const current = parseFloat(currentValue);
+  
+  if (previousValue !== null && currentOperator) {
+    if (currentOperator === '+' || currentOperator === '-') {
+      currentValue = String((previousValue * current) / 100);
+    } else {
+      currentValue = String(current / 100);
+    }
+  } else {
+    currentValue = String(current / 100);
+  }
+  
+  updateEquationDisplay();
+  updateDisplay();
 }
 
 /**
@@ -62,6 +123,7 @@ function backspace() {
     currentValue = '0';
   }
   
+  updateEquationDisplay();
   updateDisplay();
 }
 
@@ -76,6 +138,10 @@ function inputOperator(operator) {
   
   previousValue = parseFloat(currentValue);
   currentOperator = operator;
+  
+  // อัพเดทสมการ
+  equationDisplay = `${previousValue} ${getOperatorSymbol(operator)}`;
+  
   currentValue = '0';
   updateDisplay();
 }
@@ -106,8 +172,12 @@ function calculate() {
   const current = parseFloat(currentValue);
   let result;
   
-  // สร้าง expression สำหรับบันทึกประวัติ
+  // สร้าง expression สำหรับบันทึกประวัติและแสดงผล
   const expression = `${previousValue} ${getOperatorSymbol(currentOperator)} ${current}`;
+  
+  // แสดงสมการพร้อม = ก่อนคำนวณ
+  equationDisplay = `${expression} =`;
+  updateDisplay();
   
   // คำนวณตามเครื่องหมายที่เลือก
   switch(currentOperator) {
@@ -125,10 +195,8 @@ function calculate() {
         currentValue = 'Error';
         currentOperator = null;
         previousValue = null;
-        updateDisplay();
-        
-        // บันทึกประวัติแม้จะ Error
         addToHistory(expression, 'Error');
+        updateDisplay();
         return;
       }
       result = previousValue / current;
@@ -215,6 +283,7 @@ function loadFromHistory(index) {
     currentValue = item.result;
     currentOperator = null;
     previousValue = null;
+    equationDisplay = ''; // ล้างสมการ
     updateDisplay();
   }
 }
@@ -284,6 +353,7 @@ function clearAll() {
   currentValue = '0';
   previousValue = null;
   currentOperator = null;
+  equationDisplay = '';
   updateDisplay();
 }
 
@@ -340,5 +410,9 @@ document.addEventListener('keydown', (e) => {
   // กด H เพื่อแสดง/ซ่อนประวัติ
   else if (e.key === 'h' || e.key === 'H') {
     toggleHistory();
+  }
+  // กด % เพื่อคำนวณเปอร์เซ็นต์
+  else if (e.key === '%') {
+    calculatePercent();
   }
 });

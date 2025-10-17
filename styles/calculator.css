@@ -11,6 +11,7 @@
   --btn-clear: #ff6b6b;
   --btn-backspace: #ff9f43;
   --btn-decimal: #7b68ee;
+  --btn-function: #5f27cd;
   --btn-hover: rgba(255, 255, 255, 0.1);
   --shadow: rgba(0, 0, 0, 0.3);
   --history-bg: #0f1419;
@@ -31,6 +32,7 @@
   --btn-clear: #f44336;
   --btn-backspace: #ff6f00;
   --btn-decimal: #9c27b0;
+  --btn-function: #673ab7;
   --btn-hover: rgba(0, 0, 0, 0.05);
   --shadow: rgba(0, 0, 0, 0.2);
   --history-bg: #fafafa;
@@ -51,6 +53,7 @@
   --btn-clear: #ff0000;
   --btn-backspace: #ff8800;
   --btn-decimal: #ffff00;
+  --btn-function: #ff00ff;
   --btn-hover: rgba(0, 255, 65, 0.2);
   --shadow: rgba(0, 255, 65, 0.5);
   --history-bg: #000000;
@@ -300,6 +303,17 @@ body {
   opacity: 0.8;
 }
 
+.display-equation {
+  color: var(--text-secondary);
+  font-size: 18px;
+  margin-bottom: 8px;
+  min-height: 25px;
+  opacity: 0.7;
+  font-family: 'Courier New', monospace;
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .display-value {
   color: var(--text-secondary);
   font-size: 48px;
@@ -376,9 +390,20 @@ body {
   font-size: 32px;
 }
 
+/* ปุ่มฟังก์ชัน (%, +/-) */
+.btn-function {
+  background: var(--btn-function);
+  font-size: 20px;
+}
+
 /* ปุ่ม 0 กว้าง 2 ช่อง */
 .btn-zero {
   grid-column: span 2;
+}
+
+/* เอาออก: ปุ่ม = สูง 2 แถว เพราะ layout เปลี่ยน */
+.btn-equals-tall {
+  grid-row: auto;
 }
 
 /* Responsive สำหรับมือถือ */
@@ -420,6 +445,10 @@ body {
   
   .btn-backspace {
     font-size: 24px;
+  }
+  
+  .btn-function {
+    font-size: 18px;
   }
   
   .history-panel {
