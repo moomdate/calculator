@@ -43,6 +43,37 @@ function inputDecimal() {
 }
 
 /**
+ * ลบตัวเลขทีละตัวจากท้าย (Backspace)
+ */
+function backspace() {
+  // ถ้าเป็น Error ให้รีเซ็ตเป็น 0
+  if (currentValue === 'Error') {
+    currentValue = '0';
+    updateDisplay();
+    return;
+  }
+  
+  // ลบตัวสุดท้ายออก
+  if (currentValue.length > 1) {
+    currentValue = currentValue.slice(0, -1);
+    
+    // ถ้าเหลือแค่เครื่องหมาย - ให้เป็น 0
+    if (currentValue === '-') {
+      currentValue = '0';
+    }
+    // ถ้าเหลือแค่จุดทศนิยม ให้เป็น 0
+    else if (currentValue === '.') {
+      currentValue = '0';
+    }
+  } else {
+    // ถ้าเหลือตัวเดียว ให้เป็น 0
+    currentValue = '0';
+  }
+  
+  updateDisplay();
+}
+
+/**
  * เลือกเครื่องหมายคำนวณ (+, -, *, /)
  * @param {string} operator - เครื่องหมายที่เลือก
  */
@@ -166,6 +197,11 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'Enter' || e.key === '=') {
     calculate();
   } 
+  // กด Backspace หรือ Delete เพื่อลบตัวเลข
+  else if (e.key === 'Backspace' || e.key === 'Delete') {
+    e.preventDefault(); // ป้องกันการ back page ในบราวเซอร์
+    backspace();
+  }
   // กด Escape หรือ C เพื่อล้างค่า
   else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
     clearAll();

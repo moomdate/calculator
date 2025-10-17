@@ -9,6 +9,7 @@
   --btn-operator: #e94560;
   --btn-equals: #00d9ff;
   --btn-clear: #ff6b6b;
+  --btn-backspace: #ff9f43;
   --btn-decimal: #7b68ee;
   --btn-hover: rgba(255, 255, 255, 0.1);
   --shadow: rgba(0, 0, 0, 0.3);
@@ -25,6 +26,7 @@
   --btn-operator: #ff9800;
   --btn-equals: #4caf50;
   --btn-clear: #f44336;
+  --btn-backspace: #ff6f00;
   --btn-decimal: #9c27b0;
   --btn-hover: rgba(0, 0, 0, 0.05);
   --shadow: rgba(0, 0, 0, 0.2);
@@ -41,6 +43,7 @@
   --btn-operator: #ff00ff;
   --btn-equals: #00ffff;
   --btn-clear: #ff0000;
+  --btn-backspace: #ff8800;
   --btn-decimal: #ffff00;
   --btn-hover: rgba(0, 255, 65, 0.2);
   --shadow: rgba(0, 255, 65, 0.5);
@@ -197,7 +200,10 @@ body {
 /* ปุ่มเท่ากับ */
 .btn-equals {
   background: var(--btn-equals);
-  grid-column: span 3;
+}
+
+.btn-equals-tall {
+  grid-row: span 2;
 }
 
 /* ปุ่มล้าง */
@@ -205,10 +211,21 @@ body {
   background: var(--btn-clear);
 }
 
+/* ปุ่ม Backspace */
+.btn-backspace {
+  background: var(--btn-backspace);
+  font-size: 28px;
+}
+
 /* ปุ่มทศนิยม */
 .btn-decimal {
   background: var(--btn-decimal);
   font-size: 32px;
+}
+
+/* ปุ่ม 0 กว้าง 2 ช่อง */
+.btn-zero {
+  grid-column: span 2;
 }
 
 /* Responsive สำหรับมือถือ */
@@ -228,5 +245,9 @@ body {
   
   .btn-decimal {
     font-size: 28px;
+  }
+  
+  .btn-backspace {
+    font-size: 24px;
   }
 }
