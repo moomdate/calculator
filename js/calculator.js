@@ -2,6 +2,8 @@
 let currentValue = '0';      // ค่าที่แสดงบนหน้าจอ
 let previousValue = null;    // ค่าที่เก็บไว้ก่อนหน้า
 let currentOperator = null;  // เครื่องหมายคำนวณที่เลือก
+let calculationHistory = []; // เก็บประวัติการคำนวณ
+let isHistoryVisible = true; // สถานะการแสดงประวัติ
 
 /**
  * อัพเดทค่าที่แสดงบนหน้าจอ
@@ -28,14 +30,12 @@ function inputNumber(num) {
  * เพิ่มจุดทศนิยม
  */
 function inputDecimal() {
-  // ถ้าเป็น Error ให้รีเซ็ตก่อน
   if (currentValue === 'Error') {
     currentValue = '0.';
     updateDisplay();
     return;
   }
   
-  // ตรวจสอบว่ามีจุดทศนิยมอยู่แล้วหรือไม่
   if (!currentValue.includes('.')) {
     currentValue += '.';
     updateDisplay();
@@ -46,27 +46,19 @@ function inputDecimal() {
  * ลบตัวเลขทีละตัวจากท้าย (Backspace)
  */
 function backspace() {
-  // ถ้าเป็น Error ให้รีเซ็ตเป็น 0
   if (currentValue === 'Error') {
     currentValue = '0';
     updateDisplay();
     return;
   }
   
-  // ลบตัวสุดท้ายออก
   if (currentValue.length > 1) {
     currentValue = currentValue.slice(0, -1);
     
-    // ถ้าเหลือแค่เครื่องหมาย - ให้เป็น 0
-    if (currentValue === '-') {
-      currentValue = '0';
-    }
-    // ถ้าเหลือแค่จุดทศนิยม ให้เป็น 0
-    else if (currentValue === '.') {
+    if (currentValue === '-' || currentValue === '.') {
       currentValue = '0';
     }
   } else {
-    // ถ้าเหลือตัวเดียว ให้เป็น 0
     currentValue = '0';
   }
   
@@ -78,7 +70,6 @@ function backspace() {
  * @param {string} operator - เครื่องหมายที่เลือก
  */
 function inputOperator(operator) {
-  // ถ้ามีการคำนวณค้างอยู่ ให้คำนวณก่อน
   if (currentOperator && previousValue !== null) {
     calculate();
   }
@@ -87,6 +78,21 @@ function inputOperator(operator) {
   currentOperator = operator;
   currentValue = '0';
   updateDisplay();
+}
+
+/**
+ * แปลงเครื่องหมายเป็นสัญลักษณ์ที่แสดงผล
+ * @param {string} operator - เครื่องหมาย
+ * @returns {string} - สัญลักษณ์
+ */
+function getOperatorSymbol(operator) {
+  const symbols = {
+    '+': '+',
+    '-': '−',
+    '*': '×',
+    '/': '÷'
+  };
+  return symbols[operator] || operator;
 }
 
 /**
@@ -100,6 +106,9 @@ function calculate() {
   const current = parseFloat(currentValue);
   let result;
   
+  // สร้าง expression สำหรับบันทึกประวัติ
+  const expression = `${previousValue} ${getOperatorSymbol(currentOperator)} ${current}`;
+  
   // คำนวณตามเครื่องหมายที่เลือก
   switch(currentOperator) {
     case '+':
@@ -112,32 +121,160 @@ function calculate() {
       result = previousValue * current;
       break;
     case '/':
-      // ตรวจสอบการหารด้วย 0
       if (current === 0) {
         currentValue = 'Error';
         currentOperator = null;
         previousValue = null;
         updateDisplay();
+        
+        // บันทึกประวัติแม้จะ Error
+        addToHistory(expression, 'Error');
         return;
       }
       result = previousValue / current;
       break;
   }
   
-  // ปัดเศษทศนิยมให้เหลือ 8 ตำแหน่ง และตัดเลข 0 ท้ายทิ้ง
+  // ปัดเศษทศนิยมให้เหลือ 8 ตำแหน่ง
   result = Math.round(result * 100000000) / 100000000;
   
-  // แปลงเป็น string และตัดศูนย์ท้ายออก
   currentValue = String(result);
   
-  // ถ้าเป็นทศนิยมที่ยาวมาก ให้แสดงแบบ exponential
   if (currentValue.length > 12 && currentValue.includes('.')) {
     currentValue = result.toExponential(6);
   }
   
+  // บันทึกประวัติการคำนวณ
+  addToHistory(expression, currentValue);
+  
   currentOperator = null;
   previousValue = null;
   updateDisplay();
+}
+
+/**
+ * เพิ่มรายการลงในประวัติ
+ * @param {string} expression - สมการ
+ * @param {string} result - ผลลัพธ์
+ */
+function addToHistory(expression, result) {
+  const historyItem = {
+    expression: expression,
+    result: result,
+    timestamp: new Date().toLocaleString('th-TH', {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit'
+    })
+  };
+  
+  // เพิ่มรายการใหม่ที่ด้านบน
+  calculationHistory.unshift(historyItem);
+  
+  // จำกัดประวัติไว้ที่ 10 รายการ
+  if (calculationHistory.length > 10) {
+    calculationHistory.pop();
+  }
+  
+  // บันทึกลง localStorage
+  saveHistoryToStorage();
+  
+  // อัพเดท UI
+  renderHistory();
+}
+
+/**
+ * แสดงประวัติการคำนวณ
+ */
+function renderHistory() {
+  const historyList = document.getElementById('historyList');
+  
+  if (calculationHistory.length === 0) {
+    historyList.innerHTML = '<div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>';
+    return;
+  }
+  
+  historyList.innerHTML = calculationHistory.map((item, index) => `
+    <div class="history-item" onclick="loadFromHistory(${index})">
+      <div class="history-expression">${item.expression}</div>
+      <div class="history-result">= ${item.result}</div>
+      <div class="history-time">${item.timestamp}</div>
+    </div>
+  `).join('');
+}
+
+/**
+ * โหลดค่าจากประวัติ
+ * @param {number} index - ตำแหน่งในประวัติ
+ */
+function loadFromHistory(index) {
+  const item = calculationHistory[index];
+  
+  // ถ้าไม่ใช่ Error ให้โหลดผลลัพธ์
+  if (item.result !== 'Error') {
+    currentValue = item.result;
+    currentOperator = null;
+    previousValue = null;
+    updateDisplay();
+  }
+}
+
+/**
+ * ล้างประวัติทั้งหมด
+ */
+function clearHistory() {
+  if (calculationHistory.length === 0) return;
+  
+  if (confirm('ต้องการล้างประวัติการคำนวณทั้งหมดหรือไม่?')) {
+    calculationHistory = [];
+    saveHistoryToStorage();
+    renderHistory();
+  }
+}
+
+/**
+ * แสดง/ซ่อนแผงประวัติ
+ */
+function toggleHistory() {
+  const historyPanel = document.getElementById('historyPanel');
+  isHistoryVisible = !isHistoryVisible;
+  
+  if (isHistoryVisible) {
+    historyPanel.classList.remove('hidden');
+  } else {
+    historyPanel.classList.add('hidden');
+  }
+  
+  // บันทึกสถานะ
+  localStorage.setItem('calculator-history-visible', isHistoryVisible);
+}
+
+/**
+ * บันทึกประวัติลง localStorage
+ */
+function saveHistoryToStorage() {
+  localStorage.setItem('calculator-history', JSON.stringify(calculationHistory));
+}
+
+/**
+ * โหลดประวัติจาก localStorage
+ */
+function loadHistoryFromStorage() {
+  const saved = localStorage.getItem('calculator-history');
+  if (saved) {
+    calculationHistory = JSON.parse(saved);
+    renderHistory();
+  }
+  
+  // โหลดสถานะการแสดงประวัติ
+  const historyVisible = localStorage.getItem('calculator-history-visible');
+  if (historyVisible !== null) {
+    isHistoryVisible = historyVisible === 'true';
+    const historyPanel = document.getElementById('historyPanel');
+    if (!isHistoryVisible) {
+      historyPanel.classList.add('hidden');
+    }
+  }
 }
 
 /**
@@ -157,15 +294,12 @@ function clearAll() {
 function setTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   
-  // เอา active class ออกจากปุ่มทั้งหมด
   document.querySelectorAll('.theme-button').forEach(btn => {
     btn.classList.remove('active');
   });
   
-  // เพิ่ม active class ให้ปุ่มที่เลือก
   document.querySelector(`.theme-button.${theme}`).classList.add('active');
   
-  // บันทึกธีมที่เลือกไว้
   localStorage.setItem('calculator-theme', theme);
 }
 
@@ -175,35 +309,36 @@ function setTheme(theme) {
 window.addEventListener('DOMContentLoaded', () => {
   const savedTheme = localStorage.getItem('calculator-theme') || 'dark';
   setTheme(savedTheme);
+  
+  // โหลดประวัติ
+  loadHistoryFromStorage();
 });
 
 /**
  * รองรับการกดแป้นพิมพ์
  */
 document.addEventListener('keydown', (e) => {
-  // ตัวเลข 0-9
   if (e.key >= '0' && e.key <= '9') {
     inputNumber(e.key);
   } 
-  // จุดทศนิยม
   else if (e.key === '.' || e.key === ',') {
     inputDecimal();
   }
-  // เครื่องหมายคำนวณ
   else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
     inputOperator(e.key);
   } 
-  // กด Enter หรือ = เพื่อคำนวณ
   else if (e.key === 'Enter' || e.key === '=') {
     calculate();
   } 
-  // กด Backspace หรือ Delete เพื่อลบตัวเลข
   else if (e.key === 'Backspace' || e.key === 'Delete') {
-    e.preventDefault(); // ป้องกันการ back page ในบราวเซอร์
+    e.preventDefault();
     backspace();
   }
-  // กด Escape หรือ C เพื่อล้างค่า
   else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
     clearAll();
+  }
+  // กด H เพื่อแสดง/ซ่อนประวัติ
+  else if (e.key === 'h' || e.key === 'H') {
+    toggleHistory();
   }
 });

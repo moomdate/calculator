@@ -13,6 +13,9 @@
   --btn-decimal: #7b68ee;
   --btn-hover: rgba(255, 255, 255, 0.1);
   --shadow: rgba(0, 0, 0, 0.3);
+  --history-bg: #0f1419;
+  --history-item-bg: #1a1f2e;
+  --history-item-hover: #252b3b;
 }
 
 /* ธีมสว่าง */
@@ -30,6 +33,9 @@
   --btn-decimal: #9c27b0;
   --btn-hover: rgba(0, 0, 0, 0.05);
   --shadow: rgba(0, 0, 0, 0.2);
+  --history-bg: #fafafa;
+  --history-item-bg: #ffffff;
+  --history-item-hover: #e3f2fd;
 }
 
 /* ธีมนีออน */
@@ -47,6 +53,9 @@
   --btn-decimal: #ffff00;
   --btn-hover: rgba(0, 255, 65, 0.2);
   --shadow: rgba(0, 255, 65, 0.5);
+  --history-bg: #000000;
+  --history-item-bg: #0a0a0a;
+  --history-item-hover: #1a1a1a;
 }
 
 /* Reset CSS */
@@ -65,6 +74,129 @@ body {
   justify-content: center;
   align-items: center;
   padding: 20px;
+}
+
+/* Wrapper สำหรับจัด layout */
+.calculator-wrapper {
+  display: flex;
+  gap: 20px;
+  max-width: 900px;
+  width: 100%;
+  align-items: flex-start;
+}
+
+/* แผงประวัติการคำนวณ */
+.history-panel {
+  background: var(--history-bg);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 60px var(--shadow);
+  width: 300px;
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.history-panel.hidden {
+  display: none;
+}
+
+.history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid var(--text-primary);
+}
+
+.history-header h3 {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.btn-clear-history {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-clear-history:hover {
+  background: var(--btn-hover);
+  transform: scale(1.1);
+}
+
+.history-list {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.history-list::-webkit-scrollbar-track {
+  background: var(--bg-display);
+  border-radius: 10px;
+}
+
+.history-list::-webkit-scrollbar-thumb {
+  background: var(--text-primary);
+  border-radius: 10px;
+}
+
+.history-empty {
+  color: var(--text-secondary);
+  opacity: 0.5;
+  text-align: center;
+  padding: 20px;
+  font-size: 14px;
+}
+
+.history-item {
+  background: var(--history-item-bg);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+}
+
+.history-item:hover {
+  background: var(--history-item-hover);
+  border-color: var(--text-primary);
+  transform: translateX(5px);
+}
+
+.history-expression {
+  color: var(--text-secondary);
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 5px;
+  font-family: 'Courier New', monospace;
+}
+
+.history-result {
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+}
+
+.history-time {
+  color: var(--text-secondary);
+  font-size: 11px;
+  opacity: 0.5;
+  margin-top: 5px;
 }
 
 /* คอนเทนเนอร์หลัก */
@@ -89,6 +221,27 @@ body {
   color: var(--text-primary);
   font-size: 24px;
   font-weight: bold;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-history-toggle {
+  background: transparent;
+  border: 2px solid var(--text-primary);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.btn-history-toggle:hover {
+  background: var(--btn-hover);
+  transform: scale(1.1);
 }
 
 /* ปุ่มเลือกธีม */
@@ -229,6 +382,24 @@ body {
 }
 
 /* Responsive สำหรับมือถือ */
+@media (max-width: 768px) {
+  .calculator-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .history-panel {
+    width: 100%;
+    max-width: 400px;
+    order: 2;
+    max-height: 300px;
+  }
+  
+  .calculator-container {
+    order: 1;
+  }
+}
+
 @media (max-width: 480px) {
   .calculator-container {
     padding: 20px;
@@ -249,5 +420,9 @@ body {
   
   .btn-backspace {
     font-size: 24px;
+  }
+  
+  .history-panel {
+    max-height: 250px;
   }
 }
