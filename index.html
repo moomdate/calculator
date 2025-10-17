@@ -23,27 +23,28 @@
   </div>
   
   <div class="calculator-buttons">
+    <button class="btn btn-clear" onclick="clearAll()" title="ล้างทั้งหมด">C</button>
+    <button class="btn btn-backspace" onclick="backspace()" title="ลบตัวสุดท้าย">⌫</button>
+    <button class="btn btn-operator" onclick="inputOperator('/')" title="หาร">÷</button>
+    <button class="btn btn-operator" onclick="inputOperator('*')" title="คูณ">×</button>
+    
     <button class="btn btn-number" onclick="inputNumber('7')">7</button>
     <button class="btn btn-number" onclick="inputNumber('8')">8</button>
     <button class="btn btn-number" onclick="inputNumber('9')">9</button>
-    <button class="btn btn-operator" onclick="inputOperator('/')">÷</button>
+    <button class="btn btn-operator" onclick="inputOperator('-')" title="ลบ">−</button>
     
     <button class="btn btn-number" onclick="inputNumber('4')">4</button>
     <button class="btn btn-number" onclick="inputNumber('5')">5</button>
     <button class="btn btn-number" onclick="inputNumber('6')">6</button>
-    <button class="btn btn-operator" onclick="inputOperator('*')">×</button>
+    <button class="btn btn-operator" onclick="inputOperator('+')" title="บวก">+</button>
     
     <button class="btn btn-number" onclick="inputNumber('1')">1</button>
     <button class="btn btn-number" onclick="inputNumber('2')">2</button>
     <button class="btn btn-number" onclick="inputNumber('3')">3</button>
-    <button class="btn btn-operator" onclick="inputOperator('-')">−</button>
+    <button class="btn btn-equals btn-equals-tall" onclick="calculate()" title="เท่ากับ">=</button>
     
-    <button class="btn btn-clear" onclick="clearAll()">C</button>
-    <button class="btn btn-number" onclick="inputNumber('0')">0</button>
-    <button class="btn btn-decimal" onclick="inputDecimal()">.</button>
-    <button class="btn btn-operator" onclick="inputOperator('+')">+</button>
-    
-    <button class="btn btn-equals btn-equals-wide" onclick="calculate()">=</button>
+    <button class="btn btn-number btn-zero" onclick="inputNumber('0')">0</button>
+    <button class="btn btn-decimal" onclick="inputDecimal()" title="จุดทศนิยม">.</button>
   </div>
 </div>
 
