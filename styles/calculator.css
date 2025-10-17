@@ -9,6 +9,7 @@
   --btn-operator: #e94560;
   --btn-equals: #00d9ff;
   --btn-clear: #ff6b6b;
+  --btn-decimal: #7b68ee;
   --btn-hover: rgba(255, 255, 255, 0.1);
   --shadow: rgba(0, 0, 0, 0.3);
 }
@@ -24,6 +25,7 @@
   --btn-operator: #ff9800;
   --btn-equals: #4caf50;
   --btn-clear: #f44336;
+  --btn-decimal: #9c27b0;
   --btn-hover: rgba(0, 0, 0, 0.05);
   --shadow: rgba(0, 0, 0, 0.2);
 }
@@ -39,6 +41,7 @@
   --btn-operator: #ff00ff;
   --btn-equals: #00ffff;
   --btn-clear: #ff0000;
+  --btn-decimal: #ffff00;
   --btn-hover: rgba(0, 255, 65, 0.2);
   --shadow: rgba(0, 255, 65, 0.5);
 }
@@ -194,11 +197,18 @@ body {
 /* ปุ่มเท่ากับ */
 .btn-equals {
   background: var(--btn-equals);
+  grid-column: span 3;
 }
 
 /* ปุ่มล้าง */
 .btn-clear {
   background: var(--btn-clear);
+}
+
+/* ปุ่มทศนิยม */
+.btn-decimal {
+  background: var(--btn-decimal);
+  font-size: 32px;
 }
 
 /* Responsive สำหรับมือถือ */
@@ -214,5 +224,9 @@ body {
   .btn {
     padding: 15px;
     font-size: 20px;
+  }
+  
+  .btn-decimal {
+    font-size: 28px;
   }
 }
