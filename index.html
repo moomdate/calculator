@@ -7,44 +7,65 @@
 <link rel="stylesheet" href="styles/calculator.css">
 </head>
 <body>
-<div class="calculator-container">
-  <div class="calculator-header">
-    <h2 class="calculator-title">เครื่องคิดเลข</h2>
-    <div class="theme-selector">
-      <button class="theme-button dark active" onclick="setTheme('dark')" title="ธีมมืด"></button>
-      <button class="theme-button light" onclick="setTheme('light')" title="ธีมสว่าง"></button>
-      <button class="theme-button neon" onclick="setTheme('neon')" title="ธีมนีออน"></button>
+<div class="calculator-wrapper">
+  <!-- ส่วนประวัติการคำนวณ -->
+  <div class="history-panel" id="historyPanel">
+    <div class="history-header">
+      <h3>ประวัติการคำนวณ</h3>
+      <button class="btn-clear-history" onclick="clearHistory()" title="ล้างประวัติทั้งหมด">
+        🗑️
+      </button>
+    </div>
+    <div class="history-list" id="historyList">
+      <div class="history-empty">ยังไม่มีประวัติการคำนวณ</div>
     </div>
   </div>
-  
-  <div class="calculator-display">
-    <div class="display-operator" id="operatorDisplay"></div>
-    <div class="display-value" id="valueDisplay">0</div>
-  </div>
-  
-  <div class="calculator-buttons">
-    <button class="btn btn-clear" onclick="clearAll()" title="ล้างทั้งหมด">C</button>
-    <button class="btn btn-backspace" onclick="backspace()" title="ลบตัวสุดท้าย">⌫</button>
-    <button class="btn btn-operator" onclick="inputOperator('/')" title="หาร">÷</button>
-    <button class="btn btn-operator" onclick="inputOperator('*')" title="คูณ">×</button>
+
+  <!-- เครื่องคิดเลขหลัก -->
+  <div class="calculator-container">
+    <div class="calculator-header">
+      <h2 class="calculator-title">เครื่องคิดเลข</h2>
+      <div class="header-buttons">
+        <button class="btn-history-toggle" onclick="toggleHistory()" title="แสดง/ซ่อนประวัติ">
+          📜
+        </button>
+        <div class="theme-selector">
+          <button class="theme-button dark active" onclick="setTheme('dark')" title="ธีมมืด"></button>
+          <button class="theme-button light" onclick="setTheme('light')" title="ธีมสว่าง"></button>
+          <button class="theme-button neon" onclick="setTheme('neon')" title="ธีมนีออน"></button>
+        </div>
+      </div>
+    </div>
     
-    <button class="btn btn-number" onclick="inputNumber('7')">7</button>
-    <button class="btn btn-number" onclick="inputNumber('8')">8</button>
-    <button class="btn btn-number" onclick="inputNumber('9')">9</button>
-    <button class="btn btn-operator" onclick="inputOperator('-')" title="ลบ">−</button>
+    <div class="calculator-display">
+      <div class="display-operator" id="operatorDisplay"></div>
+      <div class="display-value" id="valueDisplay">0</div>
+    </div>
     
-    <button class="btn btn-number" onclick="inputNumber('4')">4</button>
-    <button class="btn btn-number" onclick="inputNumber('5')">5</button>
-    <button class="btn btn-number" onclick="inputNumber('6')">6</button>
-    <button class="btn btn-operator" onclick="inputOperator('+')" title="บวก">+</button>
-    
-    <button class="btn btn-number" onclick="inputNumber('1')">1</button>
-    <button class="btn btn-number" onclick="inputNumber('2')">2</button>
-    <button class="btn btn-number" onclick="inputNumber('3')">3</button>
-    <button class="btn btn-equals btn-equals-tall" onclick="calculate()" title="เท่ากับ">=</button>
-    
-    <button class="btn btn-number btn-zero" onclick="inputNumber('0')">0</button>
-    <button class="btn btn-decimal" onclick="inputDecimal()" title="จุดทศนิยม">.</button>
+    <div class="calculator-buttons">
+      <button class="btn btn-clear" onclick="clearAll()" title="ล้างทั้งหมด">C</button>
+      <button class="btn btn-backspace" onclick="backspace()" title="ลบตัวสุดท้าย">⌫</button>
+      <button class="btn btn-operator" onclick="inputOperator('/')" title="หาร">÷</button>
+      <button class="btn btn-operator" onclick="inputOperator('*')" title="คูณ">×</button>
+      
+      <button class="btn btn-number" onclick="inputNumber('7')">7</button>
+      <button class="btn btn-number" onclick="inputNumber('8')">8</button>
+      <button class="btn btn-number" onclick="inputNumber('9')">9</button>
+      <button class="btn btn-operator" onclick="inputOperator('-')" title="ลบ">−</button>
+      
+      <button class="btn btn-number" onclick="inputNumber('4')">4</button>
+      <button class="btn btn-number" onclick="inputNumber('5')">5</button>
+      <button class="btn btn-number" onclick="inputNumber('6')">6</button>
+      <button class="btn btn-operator" onclick="inputOperator('+')" title="บวก">+</button>
+      
+      <button class="btn btn-number" onclick="inputNumber('1')">1</button>
+      <button class="btn btn-number" onclick="inputNumber('2')">2</button>
+      <button class="btn btn-number" onclick="inputNumber('3')">3</button>
+      <button class="btn btn-equals btn-equals-tall" onclick="calculate()" title="เท่ากับ">=</button>
+      
+      <button class="btn btn-number btn-zero" onclick="inputNumber('0')">0</button>
+      <button class="btn btn-decimal" onclick="inputDecimal()" title="จุดทศนิยม">.</button>
+    </div>
   </div>
 </div>
 
